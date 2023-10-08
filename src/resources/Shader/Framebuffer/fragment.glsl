@@ -36,13 +36,15 @@ void main() {
 		sampleTex[i] = vec3(texture(tex, ourTexCoord.st + offsets[i]));
 	}
 	vec3 col = vec3(0.0);
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++) {
 		col += sampleTex[i] * kernel[i];
+	}
 
-	if(distance(position.xy, vec2(0.0)) < 0.01){
+	// Circle in the middle of the screen
+	if (distance(position.xy * screenSize, vec2(0.0)) < 10.0) {
 		col = vec3(0.0);
 	}
-	if(distance(position.xy, vec2(0.0)) < 0.008){
+	if (distance(position.xy * screenSize, vec2(0.0)) < 9.0) {
 		col = vec3(1.0);
 	}
 
