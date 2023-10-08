@@ -3,6 +3,7 @@
 uniform sampler2D tex;
 
 in vec4 ourTexCoord;
+in vec4 position;
 
 out vec4 fragColor;
 
@@ -37,6 +38,13 @@ void main() {
 	vec3 col = vec3(0.0);
 	for (int i = 0; i < 9; i++)
 		col += sampleTex[i] * kernel[i];
+
+	if(distance(position.xy, vec2(0.0)) < 0.01){
+		col = vec3(0.0);
+	}
+	if(distance(position.xy, vec2(0.0)) < 0.008){
+		col = vec3(1.0);
+	}
 
 	fragColor = vec4(col, 1.0);
 }

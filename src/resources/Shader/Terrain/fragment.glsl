@@ -1,3 +1,5 @@
+// Terrain
+
 #version 430 core
 
 uniform sampler2D tex;
@@ -5,7 +7,7 @@ uniform sampler2D tex;
 uniform vec4 cameraPos;
 
 in vec4 fragPos;
-in vec4 color;
+in vec4 inColor;
 in vec4 uvCoord;
 in vec4 normal;
 
@@ -37,18 +39,18 @@ void main() {
 
 	lightsource = vec4(0.0, 10.0, 10.0, 1.0);
 
-	vec3 color = texture(tex, uvCoord.st).rgb;
+	vec3 texColor = texture(tex, uvCoord.st).rgb;
 
 	lightsource = sunPosition;
-	color += calculateSunLight(sunColor);
+	mycolor += calculateSunLight(sunColor);
 
 	if (numOfLights == 0) {
-		fragColor = vec4(color, 1.0);
+		fragColor = vec4(texColor, 1.0);
 	} else {
-		vec4 colorWithLight = vec4(color, 1.0);
+		vec4 colorWithLight = vec4(texColor, 1.0);
 		for (int i = 0; i < numOfLights; i++) {
 			lightsource = lightsources[i];
-			colorWithLight += vec4(calculateLight(), 1.0);
+			colorWithLight += vec4(calculateLight(texColor), 1.0);
 		}
 
 		fragColor = colorWithLight;

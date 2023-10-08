@@ -10,7 +10,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 out vec4 fragPos;
-out vec4 color;
+out vec4 inColor;
 out vec4 uvCoord;
 out vec4 normal;
 
@@ -19,6 +19,6 @@ void main()
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * position;
     fragPos = modelMatrix * position;
     normal = mat4(transpose(inverse(modelMatrix))) * aNormal;
-    color = aColor;
+    inColor = aColor;
     uvCoord = texCoord;
 }
