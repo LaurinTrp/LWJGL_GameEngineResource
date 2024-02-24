@@ -2,10 +2,19 @@ package resources;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
@@ -38,7 +47,7 @@ public class ResourceLoader {
 	}
 
 	public static ByteBuffer loadTexture(String fileName) {
-		InputStream imageFile = ResourceLoader.class.getResourceAsStream("Textures/" + fileName);
+		InputStream imageFile = rl.getClass().getResourceAsStream("Textures/" + fileName);
 		byte[] imageData;
 		try {
 			imageData = IOUtils.toByteArray(imageFile);
@@ -80,12 +89,62 @@ public class ResourceLoader {
 		}
 		return null;
 	}
+	
+	public static File getFile(String parent, String file) {
+		try (InputStream is = rl.getClass().getResourceAsStream(parent + File.separator + file);){
+			return getFileFromStream(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static File getFileFromStream(InputStream is) {
+
+		File tempFolder = new File("temp");
+		tempFolder.mkdir();
+		File tempFile = new File(tempFolder, UUID.randomUUID().toString());
+		
+		try (OutputStream os = new FileOutputStream(tempFile);){
+			tempFile.createNewFile();
+			
+			byte[] buffer = is.readAllBytes();
+			
+			os.write(buffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return tempFile;
+	}
+	
+	public static File getModelFile(String parent, String file) {
+		try (InputStream is = rl.getClass().getResourceAsStream("Models" + File.separator + parent + File.separator + file);){
+			
+			return getFileFromStream(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void clear() {
+		File file = new File("temp");
+		deleteChildFiles(file);
+		file.delete();
+	}
+	
+	private static void deleteChildFiles(File root) {
+		if(root.isDirectory()) {
+			for (File file : root.listFiles()) {
+				deleteChildFiles(file);
+			}
+		}
+		root.delete();
+	}
 
 	public static void main(String[] args) {
-		ByteBuffer b = ResourceLoader.loadTexture("Warn.png");
-		for (int i = 0; i < b.capacity(); i++) {
-			System.out.println(b.get(i));
-		}
+		System.out.println(loadTexture("skybox/back.png"));
 
 	}
 
