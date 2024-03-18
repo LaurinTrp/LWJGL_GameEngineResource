@@ -6,10 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/media/laurin/Festplatte/Programmieren/Java/3D-Workbench/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0.jar"/>
-	<classpathentry kind="lib" path="/media/laurin/Festplatte/Programmieren/Java/3D-Workbench/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="/media/laurin/Festplatte/Programmieren/Java/3D-Workbench/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-sources.jar"/>
-	<classpathentry kind="lib" path="/media/laurin/Festplatte/Programmieren/Java/3D-Workbench/LWJGL_GameEngine/lib/lwjgl/natives_linux/lwjgl-natives-linux.jar"/>
-	<classpathentry kind="lib" path="/media/laurin/Festplatte/Programmieren/Java/3D-Workbench/LWJGL_GameEngine/lib/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-sources.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-tests.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/IOUtils/commons-io-2.11.0-test-sources.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/lwjgl/lwjgl.jar" sourcepath="/home/laurin/.m2/repository/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-sources.jar"/>
+	<classpathentry kind="lib" path="/LWJGL_GameEngine/lib/lwjgl/lwjgl-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
