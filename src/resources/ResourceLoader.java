@@ -24,7 +24,7 @@ public class ResourceLoader {
 	static ResourceLoader rl = new ResourceLoader();
 
 	public static Image loadImage(String imageName) {
-		return Toolkit.getDefaultToolkit().getImage(rl.getClass().getResource("images/" + imageName));
+		return Toolkit.getDefaultToolkit().getImage(rl.getClass().getResource("images" + File.separator + imageName));
 	}
 
 	public static InputStream loadFileAsStream(String fileName) {
@@ -33,7 +33,10 @@ public class ResourceLoader {
 	}
 
 	public static InputStream loadShader(String parent, String fileName) {
-		InputStream is = rl.getClass().getResourceAsStream("Shader/" + parent + "/" + fileName);
+		InputStream is = rl.getClass().getResourceAsStream("Shader/" + parent + File.separator + fileName);
+		if (is == null) {
+			System.err.println("Shader: " + parent + File.separator + fileName + " not found!");
+		}
 		return is;
 	}
 
@@ -47,7 +50,7 @@ public class ResourceLoader {
 	}
 
 	public static ByteBuffer loadTexture(String fileName) {
-		InputStream imageFile = rl.getClass().getResourceAsStream("Textures/" + fileName);
+		InputStream imageFile = rl.getClass().getResourceAsStream("Textures" + File.separator + fileName);
 		byte[] imageData;
 		try {
 			imageData = IOUtils.toByteArray(imageFile);
@@ -61,8 +64,9 @@ public class ResourceLoader {
 		}
 	}
 
-	public static ArrayList<String> loadObjFile(String parentFolder, String fileName){
-		InputStream modelFile = ResourceLoader.class.getResourceAsStream("Models/" + parentFolder + "/" + fileName);
+	public static ArrayList<String> loadObjFile(String parentFolder, String fileName) {
+		InputStream modelFile = ResourceLoader.class
+				.getResourceAsStream("Models" + File.separator + parentFolder + File.separator + fileName);
 		try {
 			String content = new String(modelFile.readAllBytes());
 			ArrayList<String> list = new ArrayList<>();
@@ -75,8 +79,9 @@ public class ResourceLoader {
 		}
 		return null;
 	}
-	public static ArrayList<String> loadMaterialFile(String parentFolder, String fileName){
-		InputStream modelFile = ResourceLoader.class.getResourceAsStream("Models/" + parentFolder + "/" + fileName);
+
+	public static ArrayList<String> loadMaterialFile(String parentFolder, String fileName) {
+		InputStream modelFile = ResourceLoader.class.getResourceAsStream("Models" + File.separator + parentFolder + File.separator + fileName);
 		try {
 			String content = new String(modelFile.readAllBytes());
 			ArrayList<String> list = new ArrayList<>();
@@ -89,53 +94,54 @@ public class ResourceLoader {
 		}
 		return null;
 	}
-	
+
 	public static File getFile(String parent, String file) {
-		try (InputStream is = rl.getClass().getResourceAsStream(parent + File.separator + file);){
+		try (InputStream is = rl.getClass().getResourceAsStream(parent + File.separator + file);) {
 			return getFileFromStream(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public static File getFileFromStream(InputStream is) {
 
 		File tempFolder = new File("temp");
 		tempFolder.mkdir();
 		File tempFile = new File(tempFolder, UUID.randomUUID().toString());
-		
-		try (OutputStream os = new FileOutputStream(tempFile);){
+
+		try (OutputStream os = new FileOutputStream(tempFile);) {
 			tempFile.createNewFile();
-			
+
 			byte[] buffer = is.readAllBytes();
-			
+
 			os.write(buffer);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return tempFile;
 	}
-	
+
 	public static File getModelFile(String parent, String file) {
-		try (InputStream is = rl.getClass().getResourceAsStream("Models" + File.separator + parent + File.separator + file);){
-			
+		try (InputStream is = rl.getClass()
+				.getResourceAsStream("Models" + File.separator + parent + File.separator + file);) {
+
 			return getFileFromStream(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public static void clear() {
 		File file = new File("temp");
 		deleteChildFiles(file);
 		file.delete();
 	}
-	
+
 	private static void deleteChildFiles(File root) {
-		if(root.isDirectory()) {
+		if (root.isDirectory()) {
 			for (File file : root.listFiles()) {
 				deleteChildFiles(file);
 			}
@@ -143,9 +149,9 @@ public class ResourceLoader {
 		root.delete();
 	}
 
-	public static void main(String[] args) {
-		System.out.println(loadTexture("skybox/back.png"));
-
-	}
+//	public static void main(String[] args) {
+//		System.out.println(loadTexture("skybox/back.png"));
+//
+//	}
 
 }

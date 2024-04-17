@@ -12,11 +12,6 @@ uniform int bufferID; // 0 = pickbuffer, 1 = framebuffer
 
 uniform vec3 colorID;
 
-const int MAX_LIGHTS = 10;
-uniform int numOfLights;
-uniform vec4 lightsources[MAX_LIGHTS];
-vec4 lightsource = vec4(1.0);
-
 uniform bool selected;
 
 uniform vec4 sunPosition;
@@ -26,7 +21,14 @@ out vec4 fragColor;
 
 float a = 0.1, d = 0.1, s = 0.1;
 
+const int MAX_LIGHTS = 10;
+uniform int numOfLights;
+uniform vec4 lightsources[MAX_LIGHTS];
+vec4 lightsource = vec4(1.0);
+
 #include <Utils/lighting.glsl>
+
+uniform Light normalLights[MAX_LIGHTS];
 
 void main() {
 	switch(bufferID){
@@ -34,7 +36,6 @@ void main() {
 		fragColor = vec4(colorID.rgb, 1.0);
 		break;
 	case 1:
-
 		if (selected) {
 			fragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			return;

@@ -1,22 +1,22 @@
 #version 430
 
-vec3 calculateLight(vec3 myColor) {
-	//  ---------------------------
+struct Light {
+	vec3 position;
+	vec3 direction;
 
-	//  vector light to fragment
-	vec3 fragmentToLight = normalize(lightsource.xyz - fragPos.xyz);
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+};
 
-	//  ambient ----------------------------------------------------------------
-	vec3 ambientColor = myColor;
-
-	//  diffuse ----------------------------------------------------------------
-	float diffuse = dot(normalize(normal.xyz), fragmentToLight);
-
+vec3 computeDiffuse(vec3 fragToLight, vec4 normal, vec3 fragColor) {
+	float diffuse = dot(normalize(normal.xyz), fragToLight);
 	diffuse = max(diffuse, 0.0);
-	vec3 diffuseColor = myColor * diffuse;
+	return fragColor * diffuse;
+}
 
-	//  specular ---------------------------------------------------------------
-	vec3 reflection = reflect(-fragmentToLight, normalize(normal.xyz));
+vec3 computeSpecular(vec3 fragToLight, vec4 fragPos, vec4 normal, vec4 cameraPos, vec3 fragColor){
+	vec3 reflection = reflect(-fragToLight, normalize(normal.xyz));
 	vec3 fragmentTocameraPos = normalize(cameraPos.xyz - fragPos.xyz);
 
 	float specular = dot(reflection, fragmentTocameraPos);
@@ -24,34 +24,32 @@ vec3 calculateLight(vec3 myColor) {
 
 	specular = pow(specular, 16.0);
 
-	vec3 specularColor = myColor * specular;
+	return fragColor * specular;
+}
+
+vec3 calculateLight(vec3 myColor) {
+
+	vec3 fragmentToLight = normalize(lightsource.xyz - fragPos.xyz);
+
+	//  ambient ----------------------------------------------------------------
+	vec3 ambientColor = myColor;
+
+	//  diffuse ----------------------------------------------------------------
+	vec3 diffuseColor = computeDiffuse(fragmentToLight, normal, myColor);
+
+	//  specular ---------------------------------------------------------------
+	vec3 specularColor = computeSpecular(fragmentToLight, fragPos, normal, cameraPos, myColor);
 
 	return (ambientColor * a) + (diffuseColor * d) + (specularColor * s);
 }
 
 vec3 calculateSunLight(vec4 sunColorIn) {
-	//  vector light to fragment
-	vec3 fragmentToLight = normalize(lightsource.xyz);
 
-	//  ambient ----------------------------------------------------------------
-	vec3 ambientColor = sunColorIn.rgb;
+	vec3 lightDir = normalize(-lightsource.xyz);
 
-	//  diffuse ----------------------------------------------------------------
-	float diffuse = dot(normalize(normal.xyz), fragmentToLight);
+	vec3 diffuseColor = computeDiffuse(lightDir, normal, sunColorIn.xyz);
 
-	diffuse = max(diffuse, 0.0f);
-	vec3 diffuseColor = sunColorIn.rgb * diffuse;
+	vec3 specularColor = computeSpecular(lightDir, fragPos, normal, cameraPos, sunColorIn.xyz);
 
-	//  specular ---------------------------------------------------------------
-	vec3 reflection = reflect(-fragmentToLight, normalize(normal.xyz));
-	vec3 fragmentTocameraPos = normalize(cameraPos.xyz - fragPos.xyz);
-
-	float specular = dot(reflection, fragmentTocameraPos);
-	specular = max(specular, 0.0f); //  0.0 ... 1.0
-
-	specular = pow(specular, 16.0f);
-
-	vec3 specularColor = sunColorIn.rgb * specular;
-
-	return (ambientColor * 0.1) + (diffuseColor * 0.1) + (specularColor * 0.1);
+	return (diffuseColor * 0.1) + (specularColor * 0.1);
 }
