@@ -18,9 +18,6 @@ in vec4 inColor;
 in vec4 uvCoord;
 in vec4 normal;
 
-const int MAX_LIGHTS = 10;
-uniform int numOfLights;
-uniform vec4 lightsources[MAX_LIGHTS];
 vec4 lightsource = vec4(1.0);
 
 uniform vec4 sunPosition;
@@ -39,16 +36,15 @@ void main() {
 	vec3 texColor = texture(heightMap, uvCoord.st).rrr * 0.2;
 
 	lightsource = sunPosition;
-
-	texColor += calculateSunLight(sunColor);
+	texColor += calculateSunLight(sunColor, lightsource);
 
 	if (numOfLights == 0) {
 		fragColor = vec4(texColor, 1.0);
 	} else {
 		vec4 colorWithLight = vec4(texColor, 1.0);
 		for (int i = 0; i < numOfLights; i++) {
-			lightsource = lightsources[i];
-			colorWithLight += vec4(calculateLight(texColor), 1.0);
+			lightsource = vec4(lights[i].position, 1.0);
+			colorWithLight += vec4(calculateLight(texColor, lightsource), 1.0);
 		}
 
 		fragColor = colorWithLight;

@@ -1,13 +1,17 @@
 #version 430
 
-struct Light {
+const int MAX_LIGHTS = 10;
+
+int numOfLights;
+
+layout (std140, binding=0) uniform Lightsbuffer {
 	vec3 position;
 	vec3 direction;
 
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
-};
+}lights[MAX_LIGHTS];
 
 vec3 computeDiffuse(vec3 fragToLight, vec4 normal, vec3 fragColor) {
 	float diffuse = dot(normalize(normal.xyz), fragToLight);
@@ -15,19 +19,20 @@ vec3 computeDiffuse(vec3 fragToLight, vec4 normal, vec3 fragColor) {
 	return fragColor * diffuse;
 }
 
-vec3 computeSpecular(vec3 fragToLight, vec4 fragPos, vec4 normal, vec4 cameraPos, vec3 fragColor){
+vec3 computeSpecular(vec3 fragToLight, vec4 fragPos, vec4 normal,
+		vec4 cameraPos, vec3 fragColor) {
 	vec3 reflection = reflect(-fragToLight, normalize(normal.xyz));
 	vec3 fragmentTocameraPos = normalize(cameraPos.xyz - fragPos.xyz);
 
 	float specular = dot(reflection, fragmentTocameraPos);
-	specular = max(specular, 0.0);//  0.0 ... 1.0
+	specular = max(specular, 0.0); //  0.0 ... 1.0
 
 	specular = pow(specular, 16.0);
 
 	return fragColor * specular;
 }
 
-vec3 calculateLight(vec3 myColor) {
+vec3 calculateLight(vec3 myColor, vec4 lightsource) {
 
 	vec3 fragmentToLight = normalize(lightsource.xyz - fragPos.xyz);
 
@@ -38,18 +43,20 @@ vec3 calculateLight(vec3 myColor) {
 	vec3 diffuseColor = computeDiffuse(fragmentToLight, normal, myColor);
 
 	//  specular ---------------------------------------------------------------
-	vec3 specularColor = computeSpecular(fragmentToLight, fragPos, normal, cameraPos, myColor);
+	vec3 specularColor = computeSpecular(fragmentToLight, fragPos, normal,
+			cameraPos, myColor);
 
 	return (ambientColor * a) + (diffuseColor * d) + (specularColor * s);
 }
 
-vec3 calculateSunLight(vec4 sunColorIn) {
+vec3 calculateSunLight(vec4 sunColorIn, vec4 lightsource) {
 
 	vec3 lightDir = normalize(-lightsource.xyz);
 
 	vec3 diffuseColor = computeDiffuse(lightDir, normal, sunColorIn.xyz);
 
-	vec3 specularColor = computeSpecular(lightDir, fragPos, normal, cameraPos, sunColorIn.xyz);
+	vec3 specularColor = computeSpecular(lightDir, fragPos, normal, cameraPos,
+			sunColorIn.xyz);
 
 	return (diffuseColor * 0.1) + (specularColor * 0.1);
 }

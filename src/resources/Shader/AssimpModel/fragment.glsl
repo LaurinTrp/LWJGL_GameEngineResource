@@ -20,15 +20,9 @@ uniform vec4 sunColor;
 out vec4 fragColor;
 
 float a = 0.1, d = 0.1, s = 0.1;
-
-const int MAX_LIGHTS = 10;
-uniform int numOfLights;
-uniform vec4 lightsources[MAX_LIGHTS];
-vec4 lightsource = vec4(1.0);
+vec4 lightsource;
 
 #include <Utils/lighting.glsl>
-
-uniform Light normalLights[MAX_LIGHTS];
 
 void main() {
 	switch(bufferID){
@@ -41,22 +35,20 @@ void main() {
 			return;
 		}
 
-		lightsource = vec4(0.0, 10.0, 10.0, 1.0);
-
 		vec3 texColor = texture(tex, uvCoord.st).rgb * 0.4;
 
 		fragColor = vec4(texColor, 1.0);
 
 		lightsource = sunPosition;
-		texColor += calculateSunLight(sunColor);
+		texColor += calculateSunLight(sunColor, lightsource);
 
 		if (numOfLights == 0) {
 			fragColor = vec4(texColor, 1.0);
 		} else {
 			vec4 colorWithLight = vec4(texColor, 1.0);
 			for (int i = 0; i < numOfLights; i++) {
-				lightsource = lightsources[i];
-				colorWithLight += vec4(calculateLight(texColor), 1.0);
+				lightsource = vec4(lights[i].position, 1.0);
+				colorWithLight += vec4(calculateLight(texColor, lightsource), 1.0);
 			}
 
 			fragColor = colorWithLight;
