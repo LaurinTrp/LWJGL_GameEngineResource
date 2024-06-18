@@ -14,13 +14,9 @@ uniform vec3 colorID;
 
 uniform bool selected;
 
-uniform vec4 sunPosition;
-uniform vec4 sunColor;
-
 out vec4 fragColor;
 
-float a = 0.1, d = 0.1, s = 0.1;
-vec4 lightsource;
+float a = 0.1, d = 0.5, s = 0.2;
 
 #include <Utils/lighting.glsl>
 
@@ -35,20 +31,17 @@ void main() {
 			return;
 		}
 
-		vec3 texColor = texture(tex, uvCoord.st).rgb * 0.4;
+		vec3 texColor = texture(tex, uvCoord.st).rgb * 0.1;
 
 		fragColor = vec4(texColor, 1.0);
-
-		lightsource = sunPosition;
-		texColor += calculateSunLight(sunColor, lightsource);
+		texColor += calculateSunLight(sunColor, sunPosition);
 
 		if (numOfLights == 0) {
 			fragColor = vec4(texColor, 1.0);
 		} else {
 			vec4 colorWithLight = vec4(texColor, 1.0);
 			for (int i = 0; i < numOfLights; i++) {
-				lightsource = vec4(lights[i].position, 1.0);
-				colorWithLight += vec4(calculateLight(texColor, lightsource), 1.0);
+				colorWithLight += vec4(calculateLight(texColor, i), 1.0);
 			}
 
 			fragColor = colorWithLight;

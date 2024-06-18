@@ -20,9 +20,6 @@ in vec4 normal;
 
 vec4 lightsource = vec4(1.0);
 
-uniform vec4 sunPosition;
-uniform vec4 sunColor;
-
 out vec4 fragColor;
 
 float a = 0.2, d = 0.2, s = 0.1;
@@ -43,8 +40,7 @@ void main() {
 	} else {
 		vec4 colorWithLight = vec4(texColor, 1.0);
 		for (int i = 0; i < numOfLights; i++) {
-			lightsource = vec4(lights[i].position, 1.0);
-			colorWithLight += vec4(calculateLight(texColor, lightsource), 1.0);
+			colorWithLight += vec4(calculateLight(texColor, i), 1.0);
 		}
 
 		fragColor = colorWithLight;
