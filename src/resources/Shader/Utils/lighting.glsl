@@ -8,7 +8,7 @@ uniform vec4 sunColor;
 uniform int numOfLights;
 
 uniform struct Lights {
-	int types[MAX_LIGHTS]; // 0=directional, 1=point, 2=spotlight
+	int types[MAX_LIGHTS]; // 1=directional, 2=point, 3=spotlight
 
 	vec3 lightPositions[MAX_LIGHTS];
 	vec3 lightDirections[MAX_LIGHTS];
@@ -60,7 +60,7 @@ vec3 calculateLight(vec3 myColor, int index) {
 	vec3 specular = computeSpecular(fragmentToLight, fragPos, normal, cameraPos)
 			* lights.lightSpeculars[index] * myColor;
 
-	if (lights.types[index] == 1) {
+	if (lights.types[index] == 2) {
 		float distance = length(lightsource - fragPos.xyz);
 		float attenation = 1.0
 				/ (lights.constant[index] + lights.linear[index] * distance
@@ -72,7 +72,7 @@ vec3 calculateLight(vec3 myColor, int index) {
 		return ambient + diffuse + specular;
 	}
 
-	if (lights.types[index] == 2) {
+	if (lights.types[index] == 3) {
 		vec3 lightDir = normalize(lightsource - fragPos.xyz);
 		float theta = dot(lightDir, normalize(-lights.lightDirections[index]));
 

@@ -112,7 +112,7 @@ public class ResourceLoader {
 
 		try (OutputStream os = new FileOutputStream(tempFile);) {
 			tempFile.createNewFile();
-
+			
 			byte[] buffer = is.readAllBytes();
 
 			os.write(buffer);
