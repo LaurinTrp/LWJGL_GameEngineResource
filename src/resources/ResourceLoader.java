@@ -33,7 +33,7 @@ public class ResourceLoader {
 	}
 
 	public static InputStream loadShader(String parent, String fileName) {
-		InputStream is = rl.getClass().getResourceAsStream("Shader/" + parent + File.separator + fileName);
+		InputStream is = rl.getClass().getResourceAsStream("shader" + File.separator + parent + File.separator + fileName);
 		if (is == null) {
 			System.err.println("Shader: " + parent + File.separator + fileName + " not found!");
 		}
@@ -50,7 +50,7 @@ public class ResourceLoader {
 	}
 
 	public static ByteBuffer loadTexture(String fileName) {
-		InputStream imageFile = rl.getClass().getResourceAsStream("Textures" + File.separator + fileName);
+		InputStream imageFile = rl.getClass().getResourceAsStream("textures" + File.separator + fileName);
 		byte[] imageData;
 		try {
 			imageData = IOUtils.toByteArray(imageFile);
@@ -66,7 +66,7 @@ public class ResourceLoader {
 
 	public static ArrayList<String> loadObjFile(String parentFolder, String fileName) {
 		InputStream modelFile = ResourceLoader.class
-				.getResourceAsStream("Models" + File.separator + parentFolder + File.separator + fileName);
+				.getResourceAsStream("models" + File.separator + parentFolder + File.separator + fileName);
 		try {
 			String content = new String(modelFile.readAllBytes());
 			ArrayList<String> list = new ArrayList<>();
@@ -81,7 +81,7 @@ public class ResourceLoader {
 	}
 
 	public static ArrayList<String> loadMaterialFile(String parentFolder, String fileName) {
-		InputStream modelFile = ResourceLoader.class.getResourceAsStream("Models" + File.separator + parentFolder + File.separator + fileName);
+		InputStream modelFile = ResourceLoader.class.getResourceAsStream("models" + File.separator + parentFolder + File.separator + fileName);
 		try {
 			String content = new String(modelFile.readAllBytes());
 			ArrayList<String> list = new ArrayList<>();
@@ -125,7 +125,7 @@ public class ResourceLoader {
 
 	public static File getModelFile(String parent, String file) {
 		try (InputStream is = rl.getClass()
-				.getResourceAsStream("Models" + File.separator + parent + File.separator + file);) {
+				.getResourceAsStream("models" + File.separator + parent + File.separator + file);) {
 
 			return getFileFromStream(is);
 		} catch (IOException e) {
